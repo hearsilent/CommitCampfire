@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Globe3D from './components/Globe3D';
 import Overlay from './components/Overlay';
-import { fetchFollowing, fetchUserEvents, fetchUserLocation } from './services/github';
+import { fetchFollowing, fetchUserCommits, fetchUserLocation } from './services/github';
 import { getCoordinates } from './services/geocoding';
 
 function App() {
@@ -57,8 +57,8 @@ function App() {
         const lng = coords.lng + jitter();
 
         // B. Check Activity (today)
-        const events = await fetchUserEvents(user.login, token);
-        const hasPushToday = events.length > 0;
+        const commitCount = await fetchUserCommits(user.login, token);
+        const hasPushToday = commitCount > 0;
 
         // Add to Points (All followed users with location)
         newPoints.push({
