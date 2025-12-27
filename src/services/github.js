@@ -48,15 +48,46 @@ export const fetchUserCommits = async (username, token) => {
         return 0;
     }
 };
+
+const LOCATION_CACHE_KEY = 'github_location_cache';
+
+let locationCache = null;
+
+const getCache = () => {
+    if (locationCache) return locationCache;
+    try {
+        const cached = localStorage.getItem(LOCATION_CACHE_KEY);
+        locationCache = cached ? JSON.parse(cached) : {};
+    } catch (e) {
+        locationCache = {};
+    }
+    return locationCache;
+};
+
+const persistCache = () => {
+    try {
+        localStorage.setItem(LOCATION_CACHE_KEY, JSON.stringify(locationCache));
+    } catch (e) {
+        console.error('Failed to save location cache to localStorage', e);
     }
 };
 
 export const fetchUserLocation = async (username, token) => {
+    const cache = getCache();
+    if (cache[username]) {
+        return cache[username];
+    }
+
     const headers = token ? { Authorization: `token ${token}` } : {};
     try {
         const res = await fetch(`${BASE_URL}/users/${username}`, { headers });
         if (!res.ok) return null;
         const user = await res.json();
+
+        // Update cache and persist
+        cache[username] = user.location;
+        persistCache();
+
         return user.location;
     } catch (error) {
         return null;
