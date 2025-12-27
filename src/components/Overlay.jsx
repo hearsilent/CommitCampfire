@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, LogOut } from 'lucide-react';
 
 const Overlay = ({ onSearch, isLoading }) => {
@@ -10,8 +10,13 @@ const Overlay = ({ onSearch, isLoading }) => {
         const params = new URLSearchParams(window.location.search);
         const code = params.get('code');
         if (code) {
+            const url = import.meta.env.VITE_SUPABASE_URL;
+            if (!url) {
+                alert('Missing VITE_SUPABASE_URL in .env');
+                return;
+            }
             setIsAuthLoading(true);
-            fetch('/api/github-auth', {
+            fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ code })
