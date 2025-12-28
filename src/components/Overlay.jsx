@@ -65,156 +65,19 @@ const Overlay = ({ onSearch, isLoading, processedCount, totalCount }) => {
         localStorage.removeItem('github_username');
     };
 
-    const styles = {
-        container: {
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
-            zIndex: 100,
-            fontFamily: 'system-ui, -apple-system, sans-serif'
-        },
-        topBar: {
-            position: 'absolute',
-            top: '21px', // Adjusted slightly for visual balance with font
-            left: '24px',
-            right: '24px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            pointerEvents: 'none'
-        },
-        header: {
-            pointerEvents: 'auto'
-        },
-        title: {
-            margin: 0,
-            fontSize: '30px',
-            fontWeight: 'bold',
-            color: '#ff5c00',
-            fontFamily: 'Malvides, sans-serif',
-            letterSpacing: '2px',
-            textShadow: '0 0 10px rgba(255, 64, 129, 0.5)',
-            lineHeight: 1,
-            transform: 'translateY(4px)'
-        },
-        actionsContainer: {
-            pointerEvents: 'auto',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px'
-        },
-        authBtn: {
-            background: 'white',
-            color: 'black',
-            border: 'none',
-            borderRadius: '12px',
-            padding: '10px 20px',
-            fontWeight: 'bold',
-            fontSize: '14px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            transition: 'all 0.2s ease',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
-        },
-        syncBtn: {
-            background: 'linear-gradient(45deg, #1b4721, #46954a)',
-            color: 'white',
-            border: 'none',
-            borderRadius: '12px',
-            padding: '10px 20px',
-            fontWeight: 'bold',
-            fontSize: '14px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            transition: 'all 0.2s ease',
-            boxShadow: '0 4px 15px rgba(35, 134, 54, 0.3)'
-        },
-        profile: {
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            background: 'rgba(0, 0, 0, 0.6)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: '12px',
-            padding: '6px 12px 6px 6px'
-        },
-        avatar: {
-            width: '28px',
-            height: '28px',
-            borderRadius: '8px',
-            border: '1.5px solid #238636'
-        },
-        usernameText: {
-            color: 'white',
-            fontSize: '13px',
-            fontWeight: 'bold'
-        },
-        logoutIcon: {
-            color: '#888',
-            cursor: 'pointer',
-            marginLeft: '4px'
-        },
-        loadingOverlay: {
-            position: 'absolute',
-            bottom: '40px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: 'rgba(0,0,0,0.7)',
-            backdropFilter: 'blur(10px)',
-            padding: '12px 24px',
-            borderRadius: '30px',
-            border: '1px solid rgba(255, 64, 129, 0.3)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            color: 'white',
-            fontSize: '13px',
-            fontWeight: 'bold',
-            letterSpacing: '1px',
-            pointerEvents: 'auto'
-        },
-        footer: {
-            position: 'absolute',
-            bottom: '24px',
-            right: '24px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            color: 'rgba(255, 255, 255, 0.6)',
-            fontSize: '14px',
-            fontWeight: '500',
-            pointerEvents: 'auto',
-            textDecoration: 'none',
-            transition: 'color 0.2s'
-        },
-        footerAvatar: {
-            width: '24px',
-            height: '24px',
-            borderRadius: '50%',
-            border: '1px solid rgba(255, 255, 255, 0.2)'
-        }
-    };
-
     return (
-        <div style={styles.container}>
+        <div className="overlay-container">
             {/* Top Bar */}
-            <div style={styles.topBar}>
-                <div style={styles.header}>
-                    <h1 style={styles.title}>CommitCampfire</h1>
+            <div className="overlay-top-bar">
+                <div className="overlay-header">
+                    <h1 className="overlay-title">CommitCampfire</h1>
                 </div>
 
-                <div style={styles.actionsContainer}>
+                <div className="overlay-actions">
                     {!token ? (
                         <button
-                            style={{ ...styles.authBtn, opacity: isAuthLoading ? 0.7 : 1 }}
+                            className="overlay-auth-btn"
+                            style={{ opacity: isAuthLoading ? 0.7 : 1 }}
                             onClick={handleLogin}
                             disabled={isAuthLoading}
                         >
@@ -223,28 +86,28 @@ const Overlay = ({ onSearch, isLoading, processedCount, totalCount }) => {
                             ) : (
                                 <>
                                     <img src={`${import.meta.env.BASE_URL}github-mark.svg`} style={{ width: 18, height: 18 }} alt="GitHub" />
-                                    Login with GitHub
+                                    <span>Login with GitHub</span>
                                 </>
                             )}
                         </button>
                     ) : (
                         <>
-                            <div style={styles.profile}>
+                            <div className="overlay-profile">
                                 <img
                                     src={`https://github.com/${username}.png`}
-                                    style={styles.avatar}
+                                    className="overlay-avatar"
                                     alt="avatar"
                                 />
-                                <span style={styles.usernameText}>{username}</span>
+                                <span className="overlay-username">{username}</span>
                                 <LogOut
                                     size={14}
-                                    style={styles.logoutIcon}
+                                    className="overlay-logout hover-white"
                                     onClick={handleLogout}
-                                    className="hover-white"
                                 />
                             </div>
                             <button
-                                style={{ ...styles.syncBtn, opacity: isLoading ? 0.7 : 1 }}
+                                className="overlay-sync-btn"
+                                style={{ opacity: isLoading ? 0.7 : 1 }}
                                 onClick={handleSync}
                                 disabled={isLoading}
                             >
@@ -261,7 +124,7 @@ const Overlay = ({ onSearch, isLoading, processedCount, totalCount }) => {
 
             {/* Loading Indicator */}
             {isLoading && (
-                <div style={styles.loadingOverlay}>
+                <div className="overlay-loading">
                     <div className="pulse-dot" />
                     Kindling Fire {totalCount > 0 ? `(${processedCount}/${totalCount})` : ''}...
                 </div>
@@ -272,27 +135,231 @@ const Overlay = ({ onSearch, isLoading, processedCount, totalCount }) => {
                 href="https://github.com/HearSilent"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={styles.footer}
-                className="hover-white"
+                className="overlay-footer hover-white"
             >
                 <img
                     src="https://github.com/HearSilent.png"
-                    style={styles.footerAvatar}
+                    className="overlay-footer-avatar"
                     alt="HearSilent"
                 />
                 Built by @HearSilent
             </a>
 
             <style>{`
+                .overlay-container {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                    z-index: 100;
+                    font-family: system-ui, -apple-system, sans-serif;
+                }
+
+                .overlay-top-bar {
+                    position: absolute;
+                    top: calc(21px + env(safe-area-inset-top));
+                    left: 24px;
+                    right: 24px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    pointer-events: none;
+                }
+
+                .overlay-header {
+                    pointer-events: auto;
+                }
+
+                .overlay-title {
+                    margin: 0;
+                    font-size: 30px;
+                    font-weight: bold;
+                    color: #ff5c00;
+                    font-family: 'Malvides', sans-serif;
+                    letter-spacing: 2px;
+                    text-shadow: 0 0 10px rgba(255, 64, 129, 0.5);
+                    line-height: 1;
+                    transform: translateY(4px);
+                }
+
+                .overlay-actions {
+                    pointer-events: auto;
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                }
+
+                .overlay-auth-btn {
+                    background: white;
+                    color: black;
+                    border: none;
+                    border-radius: 12px;
+                    padding: 10px 20px;
+                    font-weight: bold;
+                    font-size: 14px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    transition: all 0.2s ease;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                }
+
+                .overlay-sync-btn {
+                    background: linear-gradient(45deg, #1b4721, #46954a);
+                    color: white;
+                    border: none;
+                    border-radius: 12px;
+                    padding: 10px 20px;
+                    font-weight: bold;
+                    font-size: 14px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    transition: all 0.2s ease;
+                    box-shadow: 0 4px 15px rgba(35, 134, 54, 0.3);
+                }
+
+                .overlay-profile {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    background: rgba(0, 0, 0, 0.6);
+                    backdrop-filter: blur(10px);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 12px;
+                    padding: 6px 12px 6px 6px;
+                }
+
+                .overlay-avatar {
+                    width: 28px;
+                    height: 28px;
+                    border-radius: 8px;
+                    border: 1.5px solid #238636;
+                }
+
+                .overlay-username {
+                    color: white;
+                    font-size: 13px;
+                    font-weight: bold;
+                }
+
+                .overlay-logout {
+                    color: #888;
+                    cursor: pointer;
+                    margin-left: 4px;
+                }
+
+                .overlay-loading {
+                    position: absolute;
+                    bottom: calc(40px + env(safe-area-inset-bottom));
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(0,0,0,0.7);
+                    backdrop-filter: blur(10px);
+                    padding: 12px 24px;
+                    border-radius: 30px;
+                    border: 1px solid rgba(229, 83, 75, 0.3);
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    color: white;
+                    font-size: 13px;
+                    font-weight: bold;
+                    letter-spacing: 1px;
+                    pointer-events: auto;
+                    white-space: nowrap;
+                }
+
+                .overlay-footer {
+                    position: absolute;
+                    bottom: calc(24px + env(safe-area-inset-bottom));
+                    right: 24px;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    color: rgba(255, 255, 255, 0.6);
+                    font-size: 14px;
+                    font-weight: 500;
+                    pointer-events: auto;
+                    text-decoration: none;
+                    transition: color 0.2s;
+                }
+
+                .overlay-footer-avatar {
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                }
+
                 .pulse-dot {
                     width: 8px;
                     height: 8px;
-                    background: #ff4081;
+                    background: #e5534b;
                     border-radius: 50%;
                     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
                 }
+                
                 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
                 .hover-white:hover { color: white !important; }
+
+                /* Mobile Responsiveness */
+                @media (max-width: 768px) {
+                    .overlay-top-bar {
+                        top: calc(16px + env(safe-area-inset-top));
+                        left: 16px;
+                        right: 16px;
+                        flex-direction: row; /* Force row layout */
+                        align-items: center;
+                        gap: 12px;
+                    }
+
+                    .overlay-title {
+                        font-size: 20px; /* Reduce size to fit on one line */
+                        white-space: nowrap;
+                    }
+
+                    .overlay-actions {
+                        width: auto; /* Allow it to shrink/grow as needed, don't force full width */
+                        justify-content: flex-end;
+                        flex-shrink: 0; /* Prevent buttons from squishing effectively, but title shrinks first */
+                    }
+
+                    .overlay-auth-btn {
+                        padding: 8px 12px; /* Smaller padding on mobile */
+                        font-size: 13px;
+                    }
+
+                    .overlay-auth-btn span {
+                        display: none; /* Hide text on mobile to save space */
+                    }
+
+                    .overlay-username {
+                        display: none; /* Hide username on mobile to save space */
+                    }
+                    
+                    .overlay-loading {
+                        bottom: calc(100px + env(safe-area-inset-bottom));
+                        width: auto; /* Auto width based on content */
+                        min-width: 200px; /* Min width for stability */
+                        justify-content: center;
+                        font-size: 12px;
+                    }
+
+                    .overlay-footer {
+                        bottom: calc(60px + env(safe-area-inset-bottom)); /* Significantly more clearance */
+                        right: auto; /* Reset right positioning */
+                        left: 50%; /* Center horizontally */
+                        transform: translateX(-50%);
+                        width: auto;
+                        justify-content: center;
+                        white-space: nowrap;
+                    }
+                }
             `}</style>
         </div>
     );

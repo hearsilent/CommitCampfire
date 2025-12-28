@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import Globe3D from './components/Globe3D';
+import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
+const Globe3D = lazy(() => import('./components/Globe3D'));
 import Overlay from './components/Overlay';
 import { fetchFollowing, fetchUserCommits, fetchUserLocation } from './services/github';
 import { getCoordinates } from './services/geocoding';
@@ -124,12 +124,14 @@ function App() {
     <div style={{ position: 'relative', width: '100vw', height: '100vh', backgroundColor: 'black', overflow: 'hidden' }}>
       {/* 3D Layer */}
       <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 }}>
-        <Globe3D
-          pointsData={pointsData}
-          arcsData={arcsData}
-          commitArcs={commitArcs}
-          ringsData={ringsData}
-        />
+        <Suspense fallback={<div style={{ color: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>Loading Globe...</div>}>
+          <Globe3D
+            pointsData={pointsData}
+            arcsData={arcsData}
+            commitArcs={commitArcs}
+            ringsData={ringsData}
+          />
+        </Suspense>
       </div>
 
       {/* UI Layer */}
