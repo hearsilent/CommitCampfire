@@ -141,7 +141,7 @@ import{dt as s,du as J,dv as Y}from"./vendor-three-PgM_Uo9r.js";import{r as l}fr
                     backdrop-filter: blur(10px);
                     padding: 12px 24px;
                     border-radius: 30px;
-                    border: 1px solid rgba(255, 64, 129, 0.3);
+                    border: 1px solid rgba(229, 83, 75, 0.3);
                     display: flex;
                     align-items: center;
                     gap: 12px;
@@ -178,7 +178,7 @@ import{dt as s,du as J,dv as Y}from"./vendor-three-PgM_Uo9r.js";import{r as l}fr
                 .pulse-dot {
                     width: 8px;
                     height: 8px;
-                    background: #ff4081;
+                    background: #e5534b;
                     border-radius: 50%;
                     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
                 }
@@ -222,7 +222,7 @@ import{dt as s,du as J,dv as Y}from"./vendor-three-PgM_Uo9r.js";import{r as l}fr
                     }
                     
                     .overlay-loading {
-                        bottom: calc(80px + env(safe-area-inset-bottom));
+                        bottom: calc(100px + env(safe-area-inset-bottom));
                         width: auto; /* Auto width based on content */
                         min-width: 200px; /* Min width for stability */
                         justify-content: center;
@@ -230,7 +230,7 @@ import{dt as s,du as J,dv as Y}from"./vendor-three-PgM_Uo9r.js";import{r as l}fr
                     }
 
                     .overlay-footer {
-                        bottom: calc(40px + env(safe-area-inset-bottom)); /* Significantly more clearance */
+                        bottom: calc(60px + env(safe-area-inset-bottom)); /* Significantly more clearance */
                         right: auto; /* Reset right positioning */
                         left: 50%; /* Center horizontally */
                         transform: translateX(-50%);
