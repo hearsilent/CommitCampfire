@@ -2,7 +2,7 @@
 
 A 3D globe where your circle’s commits spark beams of light across the world.
 
-<img height="500" alt="image" src="https://github.com/user-attachments/assets/bacaec37-269f-440e-b2f6-f2f8ff90bb23" />
+<img height="500" src="https://github.com/user-attachments/assets/09b88705-6da6-4f2a-b0b2-da28a421cb04" />
 
 ## Features
 
