@@ -222,7 +222,7 @@ const Overlay = ({ onSearch, isLoading, processedCount, totalCount }) => {
                                 'Connecting...'
                             ) : (
                                 <>
-                                    <img src="/github-mark.svg" style={{ width: 18, height: 18 }} alt="GitHub" />
+                                    <img src={`${import.meta.env.BASE_URL}github-mark.svg`} style={{ width: 18, height: 18 }} alt="GitHub" />
                                     Login with GitHub
                                 </>
                             )}
