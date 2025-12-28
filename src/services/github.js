@@ -116,6 +116,21 @@ const persistCache = () => {
     }
 };
 
+const FALLBACK_LOCATIONS = [
+    "New York, USA", "London, UK", "Tokyo, Japan", "Paris, France", "Berlin, Germany",
+    "Sydney, Australia", "Toronto, Canada", "San Francisco, USA", "Singapore",
+    "Seoul, South Korea", "Mumbai, India", "Cape Town, South Africa", "Sao Paulo, Brazil",
+    "Mexico City, Mexico", "Bangkok, Thailand", "Amsterdam, Netherlands", "Stockholm, Sweden",
+    "Vienna, Austria", "Madrid, Spain", "Rome, Italy", "Taipei, Taiwan", "Hong Kong",
+    "Shanghai, China", "Dubai, UAE", "Moscow, Russia", "Istanbul, Turkey"
+];
+
+const getRandomLocation = (username) => {
+    const loc = FALLBACK_LOCATIONS[Math.floor(Math.random() * FALLBACK_LOCATIONS.length)];
+    console.log(`[LocationFallback] Assigned random location "${loc}" to user "${username || 'unknown'}"`);
+    return loc;
+};
+
 export const fetchUserLocation = async (username, token) => {
     const cache = getCache();
     if (cache[username]) {
@@ -125,15 +140,17 @@ export const fetchUserLocation = async (username, token) => {
     const headers = token ? { Authorization: `token ${token}` } : {};
     try {
         const res = await fetch(`${BASE_URL}/users/${username}`, { headers });
-        if (!res.ok) return null;
+        if (!res.ok) return getRandomLocation(username);
         const user = await res.json();
 
+        const location = user.location || getRandomLocation(username);
+
         // Update cache and persist
-        cache[username] = user.location;
+        cache[username] = location;
         persistCache();
 
-        return user.location;
+        return location;
     } catch (error) {
-        return null;
+        return getRandomLocation(username);
     }
 };
