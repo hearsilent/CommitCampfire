@@ -91,10 +91,10 @@ const Overlay = ({ onSearch, isLoading, processedCount, totalCount }) => {
         },
         title: {
             margin: 0,
-            fontSize: '24px',
+            fontSize: '30px',
             fontWeight: 'bold',
             color: '#ff5c00',
-            fontFamily: 'HIDROM, sans-serif',
+            fontFamily: 'Malvides, sans-serif',
             letterSpacing: '2px',
             textShadow: '0 0 10px rgba(255, 64, 129, 0.5)',
             lineHeight: 1,
@@ -122,7 +122,7 @@ const Overlay = ({ onSearch, isLoading, processedCount, totalCount }) => {
             boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
         },
         syncBtn: {
-            background: 'linear-gradient(45deg, #ff4081, #7c4dff)',
+            background: 'linear-gradient(45deg, #1b4721, #46954a)',
             color: 'white',
             border: 'none',
             borderRadius: '12px',
@@ -134,7 +134,7 @@ const Overlay = ({ onSearch, isLoading, processedCount, totalCount }) => {
             alignItems: 'center',
             gap: '8px',
             transition: 'all 0.2s ease',
-            boxShadow: '0 4px 15px rgba(255, 64, 129, 0.3)'
+            boxShadow: '0 4px 15px rgba(35, 134, 54, 0.3)'
         },
         profile: {
             display: 'flex',
@@ -150,7 +150,7 @@ const Overlay = ({ onSearch, isLoading, processedCount, totalCount }) => {
             width: '28px',
             height: '28px',
             borderRadius: '8px',
-            border: '1.5px solid #ff4081'
+            border: '1.5px solid #238636'
         },
         usernameText: {
             color: 'white',

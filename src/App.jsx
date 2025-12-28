@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Globe3D from './components/Globe3D';
 import Overlay from './components/Overlay';
 import { fetchFollowing, fetchUserCommits, fetchUserLocation } from './services/github';
@@ -12,9 +12,13 @@ function App() {
   const [ringsData, setRingsData] = useState([]);
   const [processedCount, setProcessedCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
+  const hasInitialized = useRef(false);
 
   // Load initial data if credentials exist
   useEffect(() => {
+    if (hasInitialized.current) return;
+    hasInitialized.current = true;
+
     const token = localStorage.getItem('github_token');
     const username = localStorage.getItem('github_username');
     if (token && username) {
@@ -64,7 +68,7 @@ function App() {
         const lng = coords.lng + jitter();
 
         // B. Check Activity (today)
-        const commitCount = 5;
+        const commitCount = await fetchUserCommits(user.login, token);
         const hasPushToday = commitCount > 0;
 
         // Add to Points (All followed users with location)
@@ -72,7 +76,7 @@ function App() {
           lat,
           lng,
           size: 0.5,
-          color: hasPushToday ? '#6bc46d' : '#3d444d', // Green if active, Grey if not
+          color: hasPushToday ? '#6bc46d' : '#1b4721', // Green if active, Dark Green if not
           name: user.login,
           avatarUrl: user.avatar_url
         }]);
@@ -90,13 +94,10 @@ function App() {
           setArcsData(prev => [...prev, arc]);
 
           // Animated spheres running on the arc
-          // We use Dash properties to simulate moving dots
           setCommitArcs(prev => [...prev, {
             ...arc,
-            color: '#ff6d00',
-            dashLength: 0.02,
-            dashGap: Math.max(0.1, 1 / commitCount - 0.02),
-            dashAnimateTime: 2000 + Math.random() * 1000 // varied speeds
+            ballCount: Math.min(commitCount, 5), // number of light balls
+            speed: 0.00015 + Math.random() * 0.0001
           }]);
 
           setRingsData(prev => [...prev, {
