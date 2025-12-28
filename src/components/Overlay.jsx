@@ -177,7 +177,7 @@ const Overlay = ({ onSearch, isLoading, processedCount, totalCount }) => {
                     font-size: 30px;
                     font-weight: bold;
                     color: #ff5c00;
-                    font-family: 'Malvides', sans-serif;
+                    font-family: 'BoldPixels', sans-serif;
                     letter-spacing: 2px;
                     text-shadow: 0 0 10px rgba(255, 64, 129, 0.5);
                     line-height: 1;
