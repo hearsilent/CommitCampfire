@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Search, LogOut } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
-const Overlay = ({ onSearch, isLoading }) => {
+const Overlay = ({ onSearch, isLoading, processedCount, totalCount }) => {
     const [token, setToken] = useState(localStorage.getItem('github_token') || '');
     const [username, setUsername] = useState(localStorage.getItem('github_username') || '');
     const [isAuthLoading, setIsAuthLoading] = useState(false);
@@ -76,24 +76,31 @@ const Overlay = ({ onSearch, isLoading }) => {
             zIndex: 100,
             fontFamily: 'system-ui, -apple-system, sans-serif'
         },
-        header: {
+        topBar: {
             position: 'absolute',
-            top: '24px',
+            top: '21px', // Adjusted slightly for visual balance with font
             left: '24px',
+            right: '24px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            pointerEvents: 'none'
+        },
+        header: {
             pointerEvents: 'auto'
         },
         title: {
             margin: 0,
             fontSize: '24px',
             fontWeight: 'bold',
-            color: 'white',
+            color: '#ff5c00',
+            fontFamily: 'HIDROM, sans-serif',
             letterSpacing: '2px',
-            textShadow: '0 0 10px rgba(255, 64, 129, 0.5)'
+            textShadow: '0 0 10px rgba(255, 64, 129, 0.5)',
+            lineHeight: 1,
+            transform: 'translateY(4px)'
         },
         actionsContainer: {
-            position: 'absolute',
-            top: '24px',
-            right: '24px',
             pointerEvents: 'auto',
             display: 'flex',
             alignItems: 'center',
@@ -179,67 +186,65 @@ const Overlay = ({ onSearch, isLoading }) => {
 
     return (
         <div style={styles.container}>
-            {/* Header */}
-            <div style={styles.header}>
-                <h1 style={styles.title}>CommitCampfire</h1>
-            </div>
+            {/* Top Bar */}
+            <div style={styles.topBar}>
+                <div style={styles.header}>
+                    <h1 style={styles.title}>CommitCampfire</h1>
+                </div>
 
-            {/* Top Right Actions */}
-            <div style={styles.actionsContainer}>
-                {!token ? (
-                    <button
-                        style={{ ...styles.authBtn, opacity: isAuthLoading ? 0.7 : 1 }}
-                        onClick={handleLogin}
-                        disabled={isAuthLoading}
-                    >
-                        {isAuthLoading ? (
-                            'Connecting...'
-                        ) : (
-                            <>
-                                <img src="/github-mark.svg" style={{ width: 18, height: 18 }} alt="GitHub" />
-                                Login with GitHub
-                            </>
-                        )}
-                    </button>
-                ) : (
-                    <>
-                        <div style={styles.profile}>
-                            <img
-                                src={`https://github.com/${username}.png`}
-                                style={styles.avatar}
-                                alt="avatar"
-                            />
-                            <span style={styles.usernameText}>{username}</span>
-                            <LogOut
-                                size={14}
-                                style={styles.logoutIcon}
-                                onClick={handleLogout}
-                                className="hover-white"
-                            />
-                        </div>
+                <div style={styles.actionsContainer}>
+                    {!token ? (
                         <button
-                            style={{ ...styles.syncBtn, opacity: isLoading ? 0.7 : 1 }}
-                            onClick={handleSync}
-                            disabled={isLoading}
+                            style={{ ...styles.authBtn, opacity: isAuthLoading ? 0.7 : 1 }}
+                            onClick={handleLogin}
+                            disabled={isAuthLoading}
                         >
-                            {isLoading ? (
-                                'Scanning...'
+                            {isAuthLoading ? (
+                                'Connecting...'
                             ) : (
                                 <>
-                                    <Search size={18} />
-                                    Sync
+                                    <img src="/github-mark.svg" style={{ width: 18, height: 18 }} alt="GitHub" />
+                                    Login with GitHub
                                 </>
                             )}
                         </button>
-                    </>
-                )}
+                    ) : (
+                        <>
+                            <div style={styles.profile}>
+                                <img
+                                    src={`https://github.com/${username}.png`}
+                                    style={styles.avatar}
+                                    alt="avatar"
+                                />
+                                <span style={styles.usernameText}>{username}</span>
+                                <LogOut
+                                    size={14}
+                                    style={styles.logoutIcon}
+                                    onClick={handleLogout}
+                                    className="hover-white"
+                                />
+                            </div>
+                            <button
+                                style={{ ...styles.syncBtn, opacity: isLoading ? 0.7 : 1 }}
+                                onClick={handleSync}
+                                disabled={isLoading}
+                            >
+                                {isLoading ? (
+                                    'Syncing...'
+                                ) : (
+                                    'Sync'
+                                )}
+                            </button>
+                        </>
+                    )}
+                </div>
             </div>
 
             {/* Loading Indicator */}
             {isLoading && (
                 <div style={styles.loadingOverlay}>
                     <div className="pulse-dot" />
-                    Initializing Uplink...
+                    Initializing Uplink {totalCount > 0 ? `(${processedCount}/${totalCount})` : ''}...
                 </div>
             )}
 

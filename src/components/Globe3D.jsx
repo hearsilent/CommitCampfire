@@ -4,6 +4,7 @@ import Globe from 'react-globe.gl';
 
 const Globe3D = ({
     arcsData = [],
+    commitArcs = [],
     pointsData = [],
     ringsData = []
 }) => {
@@ -29,23 +30,25 @@ const Globe3D = ({
             atmosphereColor="#3a228a"
             atmosphereAltitude={0.25}
 
-            // Arcs (Commits flying)
-            arcsData={arcsData}
-            arcColor={() => "#ff4081"}
-            arcDashLength={0.5}
-            arcDashGap={1}
-            arcDashAnimateTime={1000}
-            arcStroke={0.5}
+            // Arcs (Primary connection lines - Static)
+            arcsData={[...arcsData, ...commitArcs]}
+            arcColor={d => d.color || "#ff5c00"}
+            arcStroke={d => d.dashLength ? 1.0 : 0.4} // thicker for spheres
+            arcDashLength={d => d.dashLength || 1}
+            arcDashGap={d => d.dashGap || 0}
+            arcDashAnimateTime={d => d.dashAnimateTime || 0}
+            arcAltitude={d => d.dashLength ? 0.51 : 0.5} // slightly higher for spheres to avoid z-fighting
+            arcAltitudeAutoScale={0.5}
 
             // Points (Users)
             pointsData={pointsData}
-            pointColor={() => "#ffffff"}
-            pointAltitude={0.1}
-            pointRadius={0.5}
+            pointColor={d => d.color || "#3d444d"}
+            pointAltitude={d => d.altitude || 0.1}
+            pointRadius={d => d.size || 0.5}
 
             // Rings (Active events)
             ringsData={ringsData}
-            ringColor={() => "#ff4081"}
+            ringColor={() => "#46954a"}
             ringMaxRadius={5}
             ringPropagationSpeed={2}
             ringRepeatPeriod={1000}

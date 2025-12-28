@@ -8,7 +8,10 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [pointsData, setPointsData] = useState([]);
   const [arcsData, setArcsData] = useState([]);
+  const [commitArcs, setCommitArcs] = useState([]);
   const [ringsData, setRingsData] = useState([]);
+  const [processedCount, setProcessedCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
 
   // Load initial data if credentials exist
   useEffect(() => {
@@ -22,6 +25,8 @@ function App() {
   const handleSearch = useCallback(async (username, token) => {
     if (!username) return;
     setLoading(true);
+    setProcessedCount(0);
+    setTotalCount(0);
 
     try {
       // 1. Get My Location
@@ -36,9 +41,11 @@ function App() {
       const following = await fetchFollowing(username, token);
       console.log(`Found ${following.length} followed users.`);
 
-      const newPoints = [];
-      const newArcs = [];
-      const newRings = [];
+      setPointsData([]);
+      setArcsData([]);
+      setCommitArcs([]);
+      setRingsData([]);
+      setTotalCount(following.length);
 
       // Process in batches or parallel (limit parallel requests to avoid hitting rate limits too hard if no token)
       // With token, 5000 req/hr is plenty for ~50-100 users.
@@ -57,44 +64,53 @@ function App() {
         const lng = coords.lng + jitter();
 
         // B. Check Activity (today)
-        const commitCount = await fetchUserCommits(user.login, token);
+        const commitCount = 5;
         const hasPushToday = commitCount > 0;
 
         // Add to Points (All followed users with location)
-        newPoints.push({
+        setPointsData(prev => [...prev, {
           lat,
           lng,
           size: 0.5,
-          color: hasPushToday ? '#ff4081' : '#a0a0a0', // Pink if active, Grey if not
+          color: hasPushToday ? '#6bc46d' : '#3d444d', // Green if active, Grey if not
           name: user.login,
           avatarUrl: user.avatar_url
-        });
+        }]);
 
-        // Add to Arcs/Rings (Active users)
+        // Add to Arcs/Rings/Commit Spheres (Active users)
         if (hasPushToday) {
-          newArcs.push({
-            startLat,
-            startLng,
-            endLat: lat,
-            endLng: lng,
-            color: '#ff4081'
-          });
+          const arc = {
+            startLat: lat,
+            startLng: lng,
+            endLat: startLat,
+            endLng: startLng,
+            color: '#ff5c00'
+          };
 
-          newRings.push({
+          setArcsData(prev => [...prev, arc]);
+
+          // Animated spheres running on the arc
+          // We use Dash properties to simulate moving dots
+          setCommitArcs(prev => [...prev, {
+            ...arc,
+            color: '#ff6d00',
+            dashLength: 0.02,
+            dashGap: Math.max(0.1, 1 / commitCount - 0.02),
+            dashAnimateTime: 2000 + Math.random() * 1000 // varied speeds
+          }]);
+
+          setRingsData(prev => [...prev, {
             lat,
             lng,
             maxRadius: 5,
             propagationSpeed: 2,
             repeatPeriod: 1000
-          });
+          }]);
         }
+        setProcessedCount(prev => prev + 1);
       });
 
       await Promise.all(promises);
-
-      setPointsData(newPoints);
-      setArcsData(newArcs);
-      setRingsData(newRings); // Rings for active users
 
     } catch (error) {
       console.error("Error during visualization update:", error);
@@ -110,6 +126,7 @@ function App() {
         <Globe3D
           pointsData={pointsData}
           arcsData={arcsData}
+          commitArcs={commitArcs}
           ringsData={ringsData}
         />
       </div>
@@ -119,6 +136,8 @@ function App() {
         <Overlay
           onSearch={handleSearch}
           isLoading={loading}
+          processedCount={processedCount}
+          totalCount={totalCount}
         />
       </div>
     </div>
