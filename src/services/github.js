@@ -17,29 +17,73 @@ export const fetchFollowing = async (username, token) => {
     }
 };
 
+export const fetchUserCommitsGraphQL = async (username, token, from, to) => {
+    if (!token) return 0;
+
+    const query = `
+      query($login: String!, $from: DateTime!, $to: DateTime!) {
+        user(login: $login) {
+          contributionsCollection(from: $from, to: $to) {
+            totalCommitContributions
+          }
+        }
+      }
+    `;
+
+    try {
+        const res = await fetch('https://api.github.com/graphql', {
+            method: 'POST',
+            headers: {
+                'Authorization': `bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query,
+                variables: { login: username, from, to }
+            })
+        });
+
+        if (!res.ok) return 0;
+        const data = await res.json();
+        return data.data?.user?.contributionsCollection?.totalCommitContributions || 0;
+    } catch (error) {
+        console.error('GraphQL Fetch Error:', error);
+        return 0;
+    }
+};
+
 export const fetchUserCommits = async (username, token) => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const today = `${year}-${month}-${day}`;
+
+    // Set from/to for GraphQL - start of today to now
+    const from = `${today}T00:00:00Z`;
+    const to = now.toISOString();
+
+    // If we have a token, default to GraphQL
+    if (token) {
+        try {
+            const count = await fetchUserCommitsGraphQL(username, token, from, to);
+            return count;
+        } catch (error) {
+            console.warn(`GraphQL fetch failed for ${username}, falling back to REST:`, error);
+        }
+    }
+
+    // Fallback to REST Search API (or if no token)
     const headers = {
         'Accept': 'application/vnd.github.cloak-preview+json',
         ...(token ? { Authorization: `token ${token}` } : {})
     };
 
     try {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const today = `${year}-${month}-${day}`;
-
         const query = `author:${username} committer-date:${today}`;
         const url = `${BASE_URL}/search/commits?q=${encodeURIComponent(query).replace(/%20/g, '+')}`;
 
         const res = await fetch(url, { headers });
-
-        if (res.status === 403) {
-            console.warn(`Rate limit hit or forbidden access for ${username}. Search API has strict limits (30/min for auth, 10/min for unauth).`);
-            return 0;
-        }
-
         if (!res.ok) return 0;
 
         const data = await res.json();
