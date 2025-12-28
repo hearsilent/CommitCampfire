@@ -54,13 +54,21 @@ export const fetchUserCommitsGraphQL = async (username, token, from, to) => {
 
 export const fetchUserCommits = async (username, token) => {
     const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const today = `${year}-${month}-${day}`;
+    const threeDaysAgo = new Date(now);
+    threeDaysAgo.setDate(now.getDate() - 3);
 
-    // Set from/to for GraphQL - start of today to now
-    const from = `${today}T00:00:00Z`;
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const fromDate = formatDate(threeDaysAgo);
+    const toDate = formatDate(now);
+
+    // Set from/to for GraphQL - start of 3 days ago to now
+    const from = `${fromDate}T00:00:00Z`;
     const to = now.toISOString();
 
     // If we have a token, default to GraphQL
@@ -80,7 +88,7 @@ export const fetchUserCommits = async (username, token) => {
     };
 
     try {
-        const query = `author:${username} committer-date:${today}`;
+        const query = `author:${username} committer-date:${fromDate}..${toDate}`;
         const url = `${BASE_URL}/search/commits?q=${encodeURIComponent(query).replace(/%20/g, '+')}`;
 
         const res = await fetch(url, { headers });
