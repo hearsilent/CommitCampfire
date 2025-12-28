@@ -133,8 +133,18 @@ const FALLBACK_LOCATIONS = [
     "Shanghai, China", "Dubai, UAE", "Moscow, Russia", "Istanbul, Turkey"
 ];
 
+let shuffledLocations = [];
+
 const getRandomLocation = (username) => {
-    const loc = FALLBACK_LOCATIONS[Math.floor(Math.random() * FALLBACK_LOCATIONS.length)];
+    if (shuffledLocations.length === 0) {
+        shuffledLocations = [...FALLBACK_LOCATIONS];
+        // Fisher-Yates shuffle
+        for (let i = shuffledLocations.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledLocations[i], shuffledLocations[j]] = [shuffledLocations[j], shuffledLocations[i]];
+        }
+    }
+    const loc = shuffledLocations.pop();
     console.log(`[LocationFallback] Assigned random location "${loc}" to user "${username || 'unknown'}"`);
     return loc;
 };

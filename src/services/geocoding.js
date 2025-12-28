@@ -24,8 +24,18 @@ const RANDOM_CITIES = [
     { name: 'Vancouver', lat: 49.2827, lng: -123.1207 }
 ];
 
+let shuffledCities = [];
+
 const getRandomCityCoords = () => {
-    const city = RANDOM_CITIES[Math.floor(Math.random() * RANDOM_CITIES.length)];
+    if (shuffledCities.length === 0) {
+        shuffledCities = [...RANDOM_CITIES];
+        // Fisher-Yates shuffle
+        for (let i = shuffledCities.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledCities[i], shuffledCities[j]] = [shuffledCities[j], shuffledCities[i]];
+        }
+    }
+    const city = shuffledCities.pop();
     return { lat: city.lat, lng: city.lng };
 };
 
