@@ -1,19 +1,28 @@
 const BASE_URL = 'https://api.github.com';
 
 export const fetchFollowing = async (username, token) => {
-    const users = [];
+    let users = [];
     let page = 1;
     const headers = token ? { Authorization: `token ${token}` } : {};
 
-    // Limit to first 100 for now to avoid long wait times
     try {
-        const res = await fetch(`${BASE_URL}/users/${username}/following?per_page=100&page=${page}`, { headers });
-        if (!res.ok) throw new Error('Failed to fetch following');
-        const data = await res.json();
-        return data;
+        // Limit to first 1000 for now to avoid long wait times
+        while (users.length < 1000) {
+            const res = await fetch(`${BASE_URL}/users/${username}/following?per_page=100&page=${page}`, { headers });
+            if (!res.ok) break;
+
+            const data = await res.json();
+            if (!data || data.length === 0) break;
+
+            users = [...users, ...data];
+
+            if (data.length < 100) break;
+            page++;
+        }
+        return users.slice(0, 1000);
     } catch (error) {
         console.error(error);
-        return [];
+        return users;
     }
 };
 
