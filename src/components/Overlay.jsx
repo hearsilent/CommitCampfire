@@ -178,7 +178,6 @@ const Overlay = ({ onSearch, isLoading, processedCount, totalCount }) => {
             color: 'white',
             fontSize: '13px',
             fontWeight: 'bold',
-            textTransform: 'uppercase',
             letterSpacing: '1px',
             pointerEvents: 'auto'
         },
@@ -264,7 +263,7 @@ const Overlay = ({ onSearch, isLoading, processedCount, totalCount }) => {
             {isLoading && (
                 <div style={styles.loadingOverlay}>
                     <div className="pulse-dot" />
-                    Initializing Uplink {totalCount > 0 ? `(${processedCount}/${totalCount})` : ''}...
+                    Kindling Fire {totalCount > 0 ? `(${processedCount}/${totalCount})` : ''}...
                 </div>
             )}
 
