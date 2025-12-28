@@ -5079,7 +5079,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 
                 .overlay-top-bar {
                     position: absolute;
-                    top: 21px;
+                    top: calc(21px + env(safe-area-inset-top));
                     left: 24px;
                     right: 24px;
                     display: flex;
@@ -5175,7 +5175,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 
                 .overlay-loading {
                     position: absolute;
-                    bottom: 40px;
+                    bottom: calc(40px + env(safe-area-inset-bottom));
                     left: 50%;
                     transform: translateX(-50%);
                     background: rgba(0,0,0,0.7);
@@ -5196,7 +5196,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
 
                 .overlay-footer {
                     position: absolute;
-                    bottom: 24px;
+                    bottom: calc(24px + env(safe-area-inset-bottom));
                     right: 24px;
                     display: flex;
                     align-items: center;
@@ -5230,7 +5230,7 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                 /* Mobile Responsiveness */
                 @media (max-width: 768px) {
                     .overlay-top-bar {
-                        top: 16px;
+                        top: calc(16px + env(safe-area-inset-top));
                         left: 16px;
                         right: 16px;
                         flex-direction: column;
@@ -5252,14 +5252,14 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
                     }
                     
                     .overlay-loading {
-                        bottom: 80px; /* Move up to avoid footer overlapping */
+                        bottom: calc(80px + env(safe-area-inset-bottom)); /* Move up to avoid footer overlapping */
                         width: 80%;
                         justify-content: center;
                         font-size: 12px;
                     }
 
                     .overlay-footer {
-                        bottom: 16px;
+                        bottom: calc(16px + env(safe-area-inset-bottom));
                         right: 50%;
                         transform: translateX(50%);
                         width: 100%;
