@@ -181,6 +181,26 @@ const Overlay = ({ onSearch, isLoading, processedCount, totalCount }) => {
             textTransform: 'uppercase',
             letterSpacing: '1px',
             pointerEvents: 'auto'
+        },
+        footer: {
+            position: 'absolute',
+            bottom: '24px',
+            right: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+            color: 'rgba(255, 255, 255, 0.6)',
+            fontSize: '14px',
+            fontWeight: '500',
+            pointerEvents: 'auto',
+            textDecoration: 'none',
+            transition: 'color 0.2s'
+        },
+        footerAvatar: {
+            width: '24px',
+            height: '24px',
+            borderRadius: '50%',
+            border: '1px solid rgba(255, 255, 255, 0.2)'
         }
     };
 
@@ -247,6 +267,22 @@ const Overlay = ({ onSearch, isLoading, processedCount, totalCount }) => {
                     Initializing Uplink {totalCount > 0 ? `(${processedCount}/${totalCount})` : ''}...
                 </div>
             )}
+
+            {/* Footer */}
+            <a
+                href="https://github.com/HearSilent"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={styles.footer}
+                className="hover-white"
+            >
+                <img
+                    src="https://github.com/HearSilent.png"
+                    style={styles.footerAvatar}
+                    alt="HearSilent"
+                />
+                Built by @HearSilent
+            </a>
 
             <style>{`
                 .pulse-dot {
