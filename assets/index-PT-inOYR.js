@@ -239,7 +239,7 @@ import{dt as s,du as J,dv as Y}from"./vendor-three-PgM_Uo9r.js";import{r as l}fr
                         white-space: nowrap;
                     }
                 }
-            `})]})},E="https://api.github.com",nt=async(t,e)=>{let o=[],r=1;const a=e?{Authorization:`token ${e}`}:{};try{for(;o.length<1e3;){const n=await fetch(`${E}/users/${t}/following?per_page=100&page=${r}`,{headers:a});if(!n.ok)break;const i=await n.json();if(!i||i.length===0||(o=[...o,...i],i.length<100))break;r++}return o.slice(0,1e3)}catch(n){return console.error(n),o}},rt=async(t,e,o,r)=>{var n,i,u;if(!e)return 0;const a=`
+            `})]})},E="https://api.github.com",nt=async(t,e)=>{let o=[],r=1;const a=e?{Authorization:`token ${e}`}:{};try{for(;o.length<1e3;){const n=await fetch(`${E}/users/${t}/following?per_page=100&page=${r}`,{headers:a});if(n.status===401)return localStorage.removeItem("github_token"),localStorage.removeItem("github_username"),window.location.reload(),[];if(!n.ok)break;const i=await n.json();if(!i||i.length===0||(o=[...o,...i],i.length<100))break;r++}return o.slice(0,1e3)}catch(n){return console.error(n),o}},rt=async(t,e,o,r)=>{var n,i,u;if(!e)return 0;const a=`
       query($login: String!, $from: DateTime!, $to: DateTime!) {
         user(login: $login) {
           contributionsCollection(from: $from, to: $to) {
