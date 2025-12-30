@@ -44,7 +44,7 @@ A 3D globe where your circle’s commits spark beams of light across the world.
 3. Register a new GitHub App:
    - Go to
      [GitHub Developer Settings > New GitHub App](https://github.com/settings/apps/new).
-   - Set **Homepage URL** and **Callback URL** to `http://localhost:5173`.
+   - Set **Homepage URL** and **Callback URL** to `http://localhost:5173` or your GitHub Pages URL.
    - Uncheck **Active** under "Webhook".
    - Under **Permissions & events**, select:
      - **Followers**: Read-only

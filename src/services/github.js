@@ -9,6 +9,12 @@ export const fetchFollowing = async (username, token) => {
         // Limit to first 1000 for now to avoid long wait times
         while (users.length < 1000) {
             const res = await fetch(`${BASE_URL}/users/${username}/following?per_page=100&page=${page}`, { headers });
+            if (res.status === 401) {
+                localStorage.removeItem('github_token');
+                localStorage.removeItem('github_username');
+                window.location.reload();
+                return [];
+            }
             if (!res.ok) break;
 
             const data = await res.json();
