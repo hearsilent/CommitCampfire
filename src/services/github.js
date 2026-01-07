@@ -176,6 +176,9 @@ export const fetchUserLocation = async (username, token) => {
         if (!res.ok) return getRandomLocation(username);
         const user = await res.json();
 
+        // Skip non-User types (e.g., Organization, Bot)
+        if (user.type !== 'User') return null;
+
         const location = user.location || getRandomLocation(username);
 
         // Update cache and persist
