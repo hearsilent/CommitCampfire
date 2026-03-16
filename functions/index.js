@@ -8,6 +8,7 @@ export default {
 
         const { method, url } = request;
         const urlObj = new URL(url);
+        const path = urlObj.pathname;
 
         // Handle CORS preflight requests
         if (method === "OPTIONS") {
@@ -15,6 +16,37 @@ export default {
         }
 
         try {
+            // Geocoding Route
+            if (path === "/geocoding") {
+                const query = urlObj.searchParams.get("q");
+                if (!query) {
+                    return new Response(
+                        JSON.stringify({ error: "Missing q parameter" }),
+                        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+                    );
+                }
+
+                const geocodeRes = await fetch(
+                    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`,
+                    {
+                        headers: {
+                            "User-Agent": "CommitCampfire-Worker",
+                        },
+                    }
+                );
+
+                if (!geocodeRes.ok) {
+                    throw new Error("Geocoding provider error");
+                }
+
+                const data = await geocodeRes.json();
+                return new Response(JSON.stringify(data), {
+                    status: 200,
+                    headers: { ...corsHeaders, "Content-Type": "application/json" },
+                });
+            }
+
+            // Auth Route (Default or /auth)
             let code = urlObj.searchParams.get("code");
 
             if (method === "POST") {

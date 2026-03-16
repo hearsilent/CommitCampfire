@@ -1,5 +1,24 @@
-// Simple caching mechanism
-const cache = new Map();
+// LocalStorage caching mechanism
+const CACHE_KEY = 'geocoding_cache';
+
+const getCache = () => {
+    try {
+        const cached = localStorage.getItem(CACHE_KEY);
+        return cached ? JSON.parse(cached) : {};
+    } catch {
+        return {};
+    }
+};
+
+const setCache = (key, value) => {
+    try {
+        const cache = getCache();
+        cache[key] = value;
+        localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+    } catch {
+        // localStorage might be full or unavailable
+    }
+};
 
 const RANDOM_CITIES = [
     { name: 'Tokyo', lat: 35.6895, lng: 139.6917 },
@@ -44,15 +63,14 @@ export const getCoordinates = async (location) => {
 
     // Normalize location string
     const key = location.toLowerCase().trim();
-    if (cache.has(key)) return cache.get(key);
+    const cache = getCache();
+    if (cache[key]) return cache[key];
 
     try {
-        // Use OpenStreetMap Nominatim API (Free, but requires User-Agent)
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=1`, {
-            headers: {
-                'User-Agent': 'CommitCampfire'
-            }
-        });
+        // Use Cloudflare Worker as a proxy for Geocoding
+        let baseUrl = import.meta.env.VITE_WORKER_URL || 'https://localhost:4040';
+        if (baseUrl.endsWith('/')) baseUrl = baseUrl.slice(0, -1);
+        const res = await fetch(`${baseUrl}/geocoding?q=${encodeURIComponent(location)}`);
 
         if (!res.ok) throw new Error('Geocoding failed');
         const data = await res.json();
@@ -62,7 +80,7 @@ export const getCoordinates = async (location) => {
                 lat: parseFloat(data[0].lat),
                 lng: parseFloat(data[0].lon)
             };
-            cache.set(key, coords);
+            setCache(key, coords);
             return coords;
         }
     } catch (error) {
