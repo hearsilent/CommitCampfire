@@ -1,0 +1,9 @@
+name = "commit-campfire-auth"
+main = "functions/index.js"
+compatibility_date = "2026-03-16"
+
+[vars]
+# GITHUB_CLIENT_ID = "..." (Use dev.vars for local development)
+
+# [secrets]
+# GITHUB_CLIENT_SECRET

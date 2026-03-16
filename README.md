@@ -19,7 +19,7 @@ A 3D globe where your circle’s commits spark beams of light across the world.
 - **Styling**: Vanilla CSS, Framer Motion
 - **Icons**: Lucide React
 - **Utils**: d3-geo, date-fns
-- **Backend/Auth**: Supabase
+- **Backend/Auth**: Cloudflare Workers
 
 ## Setup & Installation
 
@@ -51,10 +51,15 @@ A 3D globe where your circle’s commits spark beams of light across the world.
    - Click **Create GitHub App**.
    - Copy the Client ID and Client Secret.
 
-4. create a `.env` file in the root directory and add your credentials:
+4. create a `.env` file in the root directory for the frontend:
    ```env
-   VITE_SUPABASE_URL=your_supabase_url_here
+   VITE_WORKER_URL=your_cloudflare_worker_url_here
    VITE_GITHUB_CLIENT_ID=your_client_id_here
+   ```
+
+5. create a `.dev.vars` file for the Worker backend:
+   ```env
+   GITHUB_CLIENT_ID=your_client_id_here
    GITHUB_CLIENT_SECRET=your_client_secret_here
    ```
 
@@ -90,14 +95,15 @@ Deploy to GitHub Pages:
 npm run deploy
 ```
 
-Deploy to Supabase Functions:
+Deploy the Cloudflare Worker:
 
 ```bash
-supabase functions deploy github-auth
+npx wrangler deploy
 ```
 
-Set up environment variables in Supabase:
+Set up production secrets on Cloudflare:
 
 ```bash
-supabase secrets set --env-file .env
+npx wrangler secret put GITHUB_CLIENT_ID
+npx wrangler secret put GITHUB_CLIENT_SECRET
 ```

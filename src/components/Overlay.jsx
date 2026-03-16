@@ -10,9 +10,9 @@ const Overlay = ({ onSearch, isLoading, processedCount, totalCount }) => {
         const params = new URLSearchParams(window.location.search);
         const code = params.get('code');
         if (code) {
-            const url = import.meta.env.VITE_SUPABASE_URL;
+            const url = import.meta.env.VITE_WORKER_URL;
             if (!url) {
-                alert('Missing VITE_SUPABASE_URL in .env');
+                alert('Missing VITE_WORKER_URL in .env');
                 return;
             }
             setIsAuthLoading(true);
